@@ -15,6 +15,9 @@ the Dynabook X30W-K after the spike-then-flatline problem was fixed.
 - `99-sof-pdm1-topology.conf`
   - Installed at `/etc/modprobe.d/99-sof-pdm1-topology.conf`
   - Forces SOF to load `sof-hda-generic-2ch-pdm1.tplg`.
+- `99-sof-dmic-quirk.conf`
+  - Installed at `/etc/modprobe.d/99-sof-dmic-quirk.conf`
+  - Legacy live quirk that selected the Realtek `laptop-dmic` model.
 - `52-force-builtin-mic.lua`
   - Installed at `~/.config/wireplumber/main.lua.d/52-force-builtin-mic.lua`
   - Keeps the DMIC source preferred and stable.
@@ -40,6 +43,7 @@ To restore this backed-up state manually:
 
 ```bash
 sudo install -m 0644 99-sof-pdm1-topology.conf /etc/modprobe.d/99-sof-pdm1-topology.conf
+sudo install -m 0644 99-sof-dmic-quirk.conf /etc/modprobe.d/99-sof-dmic-quirk.conf
 install -D -m 0644 52-force-builtin-mic.lua ~/.config/wireplumber/main.lua.d/52-force-builtin-mic.lua
 install -D -m 0644 51-disable-broken-dmic.lua.disabled ~/.config/wireplumber/main.lua.d/51-disable-broken-dmic.lua.disabled
 sudo reboot

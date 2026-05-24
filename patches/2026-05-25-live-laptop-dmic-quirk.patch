@@ -1,0 +1,55 @@
+diff --git a/backups/2026-05-25-working-dmic-fix/99-sof-dmic-quirk.conf b/backups/2026-05-25-working-dmic-fix/99-sof-dmic-quirk.conf
+new file mode 100644
+index 0000000..fc42291
+--- /dev/null
++++ b/backups/2026-05-25-working-dmic-fix/99-sof-dmic-quirk.conf
+@@ -0,0 +1 @@
++options snd_sof_intel_hda_generic hda_model=laptop-dmic
+diff --git a/backups/2026-05-25-working-dmic-fix/README.md b/backups/2026-05-25-working-dmic-fix/README.md
+index 16c15de..09b0fe8 100644
+--- a/backups/2026-05-25-working-dmic-fix/README.md
++++ b/backups/2026-05-25-working-dmic-fix/README.md
+@@ -15,6 +15,9 @@ the Dynabook X30W-K after the spike-then-flatline problem was fixed.
+ - `99-sof-pdm1-topology.conf`
+   - Installed at `/etc/modprobe.d/99-sof-pdm1-topology.conf`
+   - Forces SOF to load `sof-hda-generic-2ch-pdm1.tplg`.
++- `99-sof-dmic-quirk.conf`
++  - Installed at `/etc/modprobe.d/99-sof-dmic-quirk.conf`
++  - Legacy live quirk that selected the Realtek `laptop-dmic` model.
+ - `52-force-builtin-mic.lua`
+   - Installed at `~/.config/wireplumber/main.lua.d/52-force-builtin-mic.lua`
+   - Keeps the DMIC source preferred and stable.
+@@ -40,6 +43,7 @@ To restore this backed-up state manually:
+ 
+ ```bash
+ sudo install -m 0644 99-sof-pdm1-topology.conf /etc/modprobe.d/99-sof-pdm1-topology.conf
++sudo install -m 0644 99-sof-dmic-quirk.conf /etc/modprobe.d/99-sof-dmic-quirk.conf
+ install -D -m 0644 52-force-builtin-mic.lua ~/.config/wireplumber/main.lua.d/52-force-builtin-mic.lua
+ install -D -m 0644 51-disable-broken-dmic.lua.disabled ~/.config/wireplumber/main.lua.d/51-disable-broken-dmic.lua.disabled
+ sudo reboot
+diff --git a/docs/working-dmic-fix-2026-05-25.md b/docs/working-dmic-fix-2026-05-25.md
+index b36e1e0..de2e681 100644
+--- a/docs/working-dmic-fix-2026-05-25.md
++++ b/docs/working-dmic-fix-2026-05-25.md
+@@ -39,6 +39,21 @@ The live machine stores it at:
+ /etc/modprobe.d/99-sof-pdm1-topology.conf
+ ```
+ 
++The live machine also still has the earlier model-selection file:
++
++```text
++/etc/modprobe.d/99-sof-dmic-quirk.conf
++```
++
++with:
++
++```text
++options snd_sof_intel_hda_generic hda_model=laptop-dmic
++```
++
++That file is backed up for reproducibility. The PDM1 topology is the part that
++fixed the spike-then-flatline DMIC behavior.
++
+ WirePlumber then keeps the DMIC source preferred with:
+ 
+ ```text

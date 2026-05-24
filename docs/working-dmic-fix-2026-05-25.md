@@ -39,6 +39,21 @@ The live machine stores it at:
 /etc/modprobe.d/99-sof-pdm1-topology.conf
 ```
 
+The live machine also still has the earlier model-selection file:
+
+```text
+/etc/modprobe.d/99-sof-dmic-quirk.conf
+```
+
+with:
+
+```text
+options snd_sof_intel_hda_generic hda_model=laptop-dmic
+```
+
+That file is backed up for reproducibility. The PDM1 topology is the part that
+fixed the spike-then-flatline DMIC behavior.
+
 WirePlumber then keeps the DMIC source preferred with:
 
 ```text
