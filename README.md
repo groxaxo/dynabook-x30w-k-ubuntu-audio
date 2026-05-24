@@ -20,8 +20,13 @@ Confirmed:
 Not confirmed:
 
 - Internal speakers are not fixed yet on the tested machine.
-- The likely missing piece is a Dynabook/Realtek smart-amplifier initialization quirk in the Linux HDA driver.
-- Windows driver files reference Realtek external amp handling (`ExtAmp1308` / `ExtAmp1318`), but the Linux kernel does not currently appear to have an exact Dynabook quirk for this subsystem.
+- Root cause identified 2026-05-25: speakers are SoundWire SDCA RT1316
+  amps on links 2 and 3, not HDA codec amps. Linux 6.17 has no machine
+  match for this exact link layout (RT711@l0, RT714@l1, RT1316@l2+l3)
+  and no pre-compiled SOF topology for it either. See
+  [docs/soundwire-sdca-diagnosis-2026-05-25.md](docs/soundwire-sdca-diagnosis-2026-05-25.md).
+- Fixing this requires an upstream kernel patch plus a new SOF topology
+  file; it cannot be done as a runtime-only workaround.
 
 ## Quick Start
 
@@ -62,11 +67,19 @@ Collect useful hardware and PipeWire diagnostics:
 
 This writes a timestamped `dynabook-audio-debug-*.tar.gz` file in the current directory.
 
-## Speaker Smart-Amp Notes
+## Speaker Status
 
-See [docs/speaker-smart-amp-status.md](docs/speaker-smart-amp-status.md).
+**Updated 2026-05-25**: The speakers are **not** Realtek HDA smart-amps as
+previously assumed. They are SoundWire SDCA RT1316 amplifiers on a stack
+that Linux has no machine-driver entry for yet. See
+[docs/soundwire-sdca-diagnosis-2026-05-25.md](docs/soundwire-sdca-diagnosis-2026-05-25.md)
+for the full breakdown, decoded SoundWire topology, what an upstream patch
+needs to contain, and why a runtime workaround is not possible on stock
+Ubuntu 24.04 / kernel 6.17 today.
 
-The speaker path may show as selected, unmuted, and active while no sound comes out. That usually means the Realtek codec pin is routed but the external speaker amp is still off.
+The older HDA-smart-amp investigation notes are kept for history in
+[docs/speaker-smart-amp-status.md](docs/speaker-smart-amp-status.md);
+they are superseded by the SoundWire diagnosis.
 
 ## Working Microphone Fix Backup
 

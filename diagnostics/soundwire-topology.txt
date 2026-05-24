@@ -1,0 +1,17 @@
+Dynabook Portege X30W-K SoundWire enumeration (decoded from DSDT _ADR)
+====================================================================
+Dev   link  uniq  mfg       part                    sdw_v 
+SWD0  0     3     0x025d    0x0711 (RT711   )  1
+SWD1  3     3     0x025d    0x1316 (RT1316  )  1
+SWD2  2     3     0x025d    0x1316 (RT1316  )  1
+SWD3  1     3     0x025d    0x0714 (RT714   )  1
+SWD4  0     2     0x025d    0x0711 (RT711   )  0
+SWD5  1     2     0x025d    0x0711 (RT711   )  0
+
+Active codecs (sdw_v=1):
+  link 0: RT711 SDCA  - headset codec
+  link 1: RT714 SDCA  - digital microphone
+  link 2: RT1316 SDCA - speaker amp (left)
+  link 3: RT1316 SDCA - speaker amp (right)
+
+Required SOF link mask: 0xF (all 4 links)
