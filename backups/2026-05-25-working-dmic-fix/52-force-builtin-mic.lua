@@ -1,33 +1,3 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-CONF=/etc/modprobe.d/99-sof-pdm1-topology.conf
-BACKUP="${CONF}.bak.$(date +%Y%m%d-%H%M%S)"
-
-if [[ $EUID -ne 0 ]]; then
-  echo "Run with sudo: sudo $0" >&2
-  exit 1
-fi
-
-target_user=${SUDO_USER:-root}
-target_home=$(getent passwd "$target_user" | cut -d: -f6)
-if [[ -z "$target_home" ]]; then
-  echo "Could not determine home directory for $target_user" >&2
-  exit 1
-fi
-WP_CONF="$target_home/.config/wireplumber/main.lua.d/52-force-builtin-mic.lua"
-
-if [[ -f "$CONF" ]]; then
-  cp "$CONF" "$BACKUP"
-  echo "Backed up existing config to $BACKUP"
-fi
-
-cat > "$CONF" <<'EOF'
-options snd_sof tplg_filename=sof-hda-generic-2ch-pdm1.tplg
-EOF
-
-echo "Installed $CONF"
-install -D -m 0644 /dev/stdin "$WP_CONF" <<'EOF'
 -- Keep the internal microphone routes stable on the Dynabook X30W-K.
 alsa_monitor.rules = alsa_monitor.rules or {}
 
@@ -71,9 +41,3 @@ table.insert(alsa_monitor.rules, {
     ["node.pause-on-idle"] = false,
   },
 })
-EOF
-if [[ "$target_user" != root ]]; then
-  chown "$target_user:$target_user" "$WP_CONF"
-fi
-echo "Installed $WP_CONF"
-echo "Reboot required: sudo reboot"

@@ -13,8 +13,8 @@ This repo was created from live debugging on:
 
 Confirmed:
 
-- Internal microphone can be exposed again by forcing the Realtek `laptop-dmic` HDA model.
-- PipeWire can record from the internal mic after the quirk is loaded.
+- Digital microphone is stable when SOF loads `sof-hda-generic-2ch-pdm1.tplg`.
+- PipeWire can record from the DMIC after the PDM1 topology and WirePlumber preference are loaded.
 - Speaker/Headphones sink can be selected and unmuted from software.
 
 Not confirmed:
@@ -47,7 +47,7 @@ If speakers are muted or on the wrong default sink:
 For Audacity, choose this recording device:
 
 ```text
-Alder Lake PCH-P High Definition Audio Controller Internal Stereo Microphone
+Alder Lake PCH-P High Definition Audio Controller Digital Microphone
 ```
 
 Do not choose a `monitor` source unless you intentionally want to record system playback.
@@ -68,6 +68,13 @@ See [docs/speaker-smart-amp-status.md](docs/speaker-smart-amp-status.md).
 
 The speaker path may show as selected, unmuted, and active while no sound comes out. That usually means the Realtek codec pin is routed but the external speaker amp is still off.
 
+## Working Microphone Fix Backup
+
+The known-good DMIC configuration from 2026-05-25 is backed up in
+[`backups/2026-05-25-working-dmic-fix`](backups/2026-05-25-working-dmic-fix).
+See [`docs/working-dmic-fix-2026-05-25.md`](docs/working-dmic-fix-2026-05-25.md)
+for the implementation notes and validation command.
+
 ## Windows Driver Backup
 
 If you still have the original Windows partition, see [docs/windows-driver-backup-from-ubuntu.md](docs/windows-driver-backup-from-ubuntu.md). It explains how to copy the Windows Driver Store from Ubuntu for later restoration on Windows.
@@ -77,4 +84,3 @@ If you still have the original Windows partition, see [docs/windows-driver-backu
 The normal scripts only set ALSA/PipeWire defaults and one persistent module option.
 
 The `experimental/` script applies live Realtek codec verbs. It is intentionally not part of quick start because it did not fix the tested machine's speakers and should only be used by people collecting data for kernel debugging.
-
